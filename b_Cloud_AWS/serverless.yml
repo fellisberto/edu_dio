@@ -1,0 +1,64 @@
+service: aws_dio
+
+provider:
+  name: aws
+  runtime: pyrhon3.8
+  region: us-east-1
+  iamRoleStatements: #permissão IAM para a função lambda
+    - Effect: allow 
+      Action:
+        - dynamodb:*
+      Resource: "*" 
+
+functions:
+  addItem:
+    handeler: src/functions/addItem/handler.add_item
+    events:
+      - https:
+          path: add-item
+          method: post
+
+  hello:
+    handler: src/functions/hello/handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+
+  listItems:
+    handler: src/functions/list_items/handler.list_items
+    events:
+      - https:
+          path: list-items
+          method: get
+
+  getItemByid:
+    handle: src/functions/get_item_id/handler.get_item_id
+    events: 
+      - https:
+          path: item/{id}
+          method: get
+
+  updateItem:
+    handler: src/functions/update_item/handler.update_item
+    events:
+      - http:
+        path: update-item
+        method: put
+
+resources:
+  Resources:
+    Itemstable:
+      type: "AWS: :DynamoDB: :Table"
+      properties:
+        TableName: "items"
+        AttributeDefinitions:
+          - AttributeName: "ItemId"
+            AttributeType: "S"
+        Keyschema:
+          - AttributeName: "ItemId"
+            KetType: "HASH"
+        BillingMode: PAY_PER_REQUEST
+        ProvisionedThroughput: #capacidade provisionada para a tabela
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

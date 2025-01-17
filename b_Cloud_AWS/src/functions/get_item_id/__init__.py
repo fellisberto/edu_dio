@@ -1,0 +1,1 @@
+#Este arquivo marca o diretorio 'hello' como um pacote Python.

@@ -1,0 +1,1 @@
+#Este arquivo marca o diretorio 'list_items' como um pacote Python.
